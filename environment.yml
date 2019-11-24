@@ -1,0 +1,4 @@
+name: nlf
+
+dependencies:
+  - python=3.8
