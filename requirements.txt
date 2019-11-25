@@ -4,3 +4,5 @@ plotly
 cytoolz
 jupyter
 spektral
+lxml
+fire
