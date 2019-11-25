@@ -6,6 +6,7 @@ import keras
 import numpy as np
 import plotly.graph_objs as go
 import yaml
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 from . import estimator
 
@@ -37,16 +38,21 @@ def main(data_path, params_path, toy=False, cache=False):
     print("Es", Es.shape, Es.dtype)
     print("y", y.shape, y.dtype)
 
-    # go.Figure(data=[go.Heatmap(z=Es[0, ..., 0])]).show()
-
     np.set_printoptions(suppress=True)
-    # print(X[0])
-    # exit()
 
     params["X_shape"] = X.shape[1:]
     params["A_shape"] = As.shape[1:]
     params["E_shape"] = Es.shape[1:]
 
+    # baseline
+    y_mean = np.mean(y) * np.ones_like(y)
+
+    print("BASELINE")
+    print(
+        f"MSE: {mean_squared_error(y, y_mean)}, MAE: {mean_absolute_error(y, y_mean)}"
+    )
+
+    # model
     model = estimator.get_model(params)
     model.summary()
 
