@@ -147,7 +147,7 @@ def get_model(params):
     ################################
 
     # concat = Concatenate()([dense1, aux_in])
-    net = Dense(128)(net)
+    net = Dense(64)(net)
     net = layers.BatchNormalization()(net)
     net = layers.Activation("relu")(net)
 
@@ -172,7 +172,7 @@ def get_model(params):
     return model
 
 
-class RelationalDense(layers.Dense):
+class RelationalDense(keras.Model):
     def __init__(
         self,
         channels,
@@ -187,8 +187,8 @@ class RelationalDense(layers.Dense):
         bias_constraint=None,
         **kwargs,
     ):
-        super().__init__(
-            channels,
+        self.channels = channels
+        self.dense_args = dict(
             activation=activation,
             use_bias=use_bias,
             kernel_initializer=kernel_initializer,
@@ -198,15 +198,16 @@ class RelationalDense(layers.Dense):
             activity_regularizer=activity_regularizer,
             kernel_constraint=kernel_constraint,
             bias_constraint=bias_constraint,
-            **kwargs,
         )
+        super().__init__(**kwargs)
 
     def build(self, input_shape):
         if isinstance(input_shape, list):
             input_shape = input_shape[0]
 
         dense_shape = (input_shape[0], input_shape[1], input_shape[1], input_shape[2])
-        super().build(dense_shape)
+
+        self.dense = layers.Dense(self.channels, **self.dense_args)
 
     def call(self, x):
 
@@ -240,7 +241,7 @@ class RelationalDense(layers.Dense):
         if isinstance(input_shape, list):
             input_shape = input_shape[0]
 
-        return (input_shape[0], input_shape[1], input_shape[1], self.units)
+        return (input_shape[0], input_shape[1], input_shape[1], self.channels)
 
 
 class AggEdges(layers.Layer):
