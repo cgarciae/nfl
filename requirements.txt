@@ -6,3 +6,4 @@ jupyter
 spektral
 lxml
 fire
+pydot

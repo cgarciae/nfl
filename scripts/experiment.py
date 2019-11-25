@@ -49,6 +49,8 @@ def main(data_path, params_path, toy=False, cache=False):
 
     model = estimator.get_model(params)
     model.summary()
+    keras.utils.plot_model(model, to_file='model.png')
+
 
     model.fit(
         # [X, As, Es],
