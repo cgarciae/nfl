@@ -1,4 +1,6 @@
+tqdm
 pandas
 plotly
 cytoolz
 jupyter
+spektral
